@@ -39,6 +39,7 @@ export default {
   margin: 0
   padding: 0
   list-style: none
+  font-family: PingFangTC-Regular
 #app
   header
     width: 100%

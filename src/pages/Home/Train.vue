@@ -304,7 +304,7 @@ export default {
         background-position: 95% center
         box-sizing: border-box
         @media screen and (max-width: 515px)
-          width: 48%
+          width: 49%
           background: white
       input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button
         display: none
@@ -320,7 +320,7 @@ export default {
         @media screen and (max-width: 515px)
           width: 50%
           display: inline
-          margin-left: 5px
+          margin-left: 3px
           letter-spacing: 0
         input
           width: 48px
