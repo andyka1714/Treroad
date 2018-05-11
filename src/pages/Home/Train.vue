@@ -10,8 +10,8 @@
     </div>
     <div class="treroad-train-selectStation">
       <p>選擇站名</p>
-      <input @click="selectDepartureArea()" type="button" :value="selectStation.departureStation">
-      <input @click="selectArrivalArea()" type="button" :value="selectStation.arrivalStation">
+      <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
+      <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
       <img @click="stationExchange()" class="treroad-train-transfer" src="../../assets/iconTransfer.png" alt="transfer">
     </div>
     <div class="treroad-train-selectTime">
@@ -81,6 +81,12 @@ export default {
     stationData () {
       var area = this.selectStation.area
       return this.trainStationList[area]
+    },
+    departureSelected(){
+      return this.selectStation.departureStation !== '起始站'
+    },
+    arrivalSelected(){
+      return this.selectStation.arrivalStation !== '終點站'
     }
   },
   components: {},
@@ -145,7 +151,7 @@ export default {
           this.selectStation.arrivalStation = station
         }
       }
-      
+
       this.areaShow = false
       this.stationShow = false
     },
@@ -280,6 +286,8 @@ export default {
         background-color: white
         border: 1px solid rgb(102, 123, 134)
         cursor: pointer
+      .selected
+        color: #4a4a4a
       .treroad-train-transfer
         position: absolute
         bottom: 30px
