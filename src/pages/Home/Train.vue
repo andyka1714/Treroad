@@ -30,9 +30,21 @@
     <button class="treroad-train-startSearch" @click="getResult()">開始查詢</button>
     <div v-if="areaShow" class="treroad-train-areaBackground">
       <div class="treroad-train-area">
-        <p>台鐵列表</p>
+        <p>北部</p>
         <ul>
-          <li v-for="(area, key) in trainStationList" @click="getArea(key)">{{key}}</li>
+          <li v-for="(area, key) in areaPart('北部')" @click="getArea(area)">{{area}}</li>
+        </ul>
+        <p>中部</p>
+        <ul>
+          <li v-for="(area, key) in areaPart('中部')" @click="getArea(area)">{{area}}</li>
+        </ul>
+        <p>南部</p>
+        <ul>
+          <li v-for="(area, key) in areaPart('南部')" @click="getArea(area)">{{area}}</li>
+        </ul>
+        <p>東部</p>
+        <ul>
+          <li v-for="(area, key) in areaPart('東部')" @click="getArea(area)">{{area}}</li>
         </ul>
         <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
       </div>
@@ -53,6 +65,7 @@
 
 <script>
 import axios from 'axios'
+import stationPart from '../../../static/json/stationPart.json'
 export default {
   props: {},
   data () {
@@ -93,6 +106,9 @@ export default {
   watch: {},
   mixins: [],
   methods: {
+    areaPart(part){
+      return stationPart[part]
+    },
     getTrainStation () {
       axios({
         method: 'get',
@@ -365,7 +381,7 @@ export default {
       background: rgba(0, 0, 0, .4)
       .treroad-train-area
         position: relative
-        width: 665px
+        width: 677px
         min-height: 285px
         padding: 8px 10px
         background: white
