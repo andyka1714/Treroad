@@ -27,7 +27,11 @@
         分
       </div>
     </div>
-    <button class="treroad-thsr-startSearch" @click="getResult()">開始查詢</button>
+    <button class="treroad-thsr-startSearch" @click="getResult()">
+      <span v-if="!isLoading">開始查詢</span>
+      <Loading v-if="isLoading">
+      </Loading>
+    </button>
     <div v-if="stationShow" class="treroad-thsr-stationBackground">
       <div class="treroad-thsr-station">
         <p>高鐵列表</p>
@@ -41,11 +45,13 @@
 </template>
 
 <script>
+import Loading from '@/components/Loading'
 import axios from 'axios'
 export default {
   props: {},
   data () {
     return {
+      isLoading:false,
       restrictDate:new Date().toJSON().slice(0,10),
       trainStationList: [],
       selectStation: {
@@ -73,7 +79,9 @@ export default {
       return this.selectStation.arrivalStation !== '終點站'
     }
   },
-  components: {},
+  components: {
+    Loading
+  },
   watch: {},
   mixins: [],
   methods: {
@@ -93,12 +101,14 @@ export default {
       let arrivalStation = this.selectStation.arrivalStation
       let searchTime = this.searchTime.day.split("-").join('')
       let vm = this
+      this.isLoading = true
       axios({
         method: 'get',
         url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=thsr`
       })
       .then((response) => {
         console.log(response.data.payload)
+        this.isLoading = false
         if(this.selectStation.departureStation == '起始站'){
           alert('請選擇您要出發的站別～')
           return
@@ -333,6 +343,7 @@ export default {
       background: rgb(68, 199, 168)
       cursor: pointer
       border: 0px
+      outline: 0
     .treroad-thsr-stationBackground
       position: fixed
       top: 0
