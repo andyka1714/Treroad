@@ -27,7 +27,9 @@
         分
       </div>
     </div>
-    <button class="treroad-train-startSearch" @click="getResult()">開始查詢</button>    
+    <button class="treroad-train-startSearch" @click="getResult()">開始查詢</button>
+    <Loading class="treroad-train-loading">
+    </Loading>
     <div v-if="areaShow" class="treroad-train-areaBackground">
       <div class="treroad-train-area">
         <p>北部</p>
@@ -374,6 +376,10 @@ export default {
       background: rgb(68, 199, 168)
       cursor: pointer
       border: 0px
+    .treroad-train-loading
+      position: absolute
+      left: calc(50% - 28px)
+      bottom: 0px
     .treroad-train-areaBackground
       position: fixed
       top: 0
