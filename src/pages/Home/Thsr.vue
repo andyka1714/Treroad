@@ -10,8 +10,8 @@
     </div>
     <div class="treroad-thsr-selectStation">
       <p>選擇站名</p>
-      <input @click="selectDepartureArea()" type="button" :value="selectStation.departureStation">
-      <input @click="selectArrivalArea()" type="button" :value="selectStation.arrivalStation">
+      <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
+      <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
       <img @click="stationExchange()" class="treroad-thsr-transfer" src="../../assets/iconTransfer.png" alt="transfer">
     </div>
     <div class="treroad-thsr-selectTime">
@@ -64,7 +64,14 @@ export default {
       searchType: 'thsr'
     }
   },
-  computed: {},
+  computed: {
+    departureSelected(){
+      return this.selectStation.departureStation !== '起始站'
+    },
+    arrivalSelected(){
+      return this.selectStation.arrivalStation !== '終點站'
+    }
+  },
   components: {},
   watch: {},
   mixins: [],
@@ -256,6 +263,8 @@ export default {
         background-color: white
         border: 1px solid rgb(102, 123, 134)
         cursor: pointer
+      .selected
+        color: #4a4a4a
       .treroad-thsr-transfer
         position: absolute
         bottom: 30px
