@@ -28,7 +28,7 @@
       </div>
     </div>
     <button class="treroad-train-startSearch" @click="getResult()">開始查詢</button>
-    <Loading class="treroad-train-loading">
+    <Loading v-if="isLoading" class="treroad-train-loading">
     </Loading>
     <div v-if="areaShow" class="treroad-train-areaBackground">
       <div class="treroad-train-area">
@@ -76,6 +76,7 @@ export default {
   },
   data () {
     return {
+      isLoading:false,
       trainStationList: {},
       selectStation: {
         selectType: '',
@@ -130,12 +131,14 @@ export default {
       let arrivalStation = this.selectStation.arrivalStation
       let searchTime = this.searchTime.day.split("-").join('')
       let vm = this
+      this.isLoading = true
       axios({
         method: 'get',
         url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=tra`
       })
       .then((response) => {
-        console.log(response.data.payload)
+        // console.log(response.data.payload)
+        this.isLoading = false
         if(this.selectStation.departureStation == '起始站'){
           alert('請選擇您要出發的站別～')
           return
