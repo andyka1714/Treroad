@@ -48,16 +48,17 @@
             </div>
             <div class="treroad-searchResults-transferInformation">
               <div v-for="(transferInformation, index) in shift.transferInformation" class="treroad-searchResults-transferInformation-transferArea">
+                <!-- {{transferInformation}} -->
                 <div v-if="index == 0" class="treroad-searchResults-transferInformation-departureStation">
                   <p class="treroad-searchResults-transferInformation-departureTime">{{transferInformation.departureTime}}</p>
                   <span class="treroad-searchResults-transferInformation-circle"></span>
                   <p class="treroad-searchResults-transferInformation-station">{{transferInformation.departureStation}}</p>
-                  <span class="treroad-searchResults-transferInformation-departureLine"></span>
+                  <span class="treroad-searchResults-transferInformation-departureLine" v-bind:style="{'background': classfyColor(transferInformation.trainClassification)}"></span>
                 </div>
                 <div class="treroad-searchResults-transferInformation-singleTrainInformation">
                   <img src="../assets/train-icon.png" alt="train">
                   <p ><span>{{transferInformation.trainClassification}}{{transferInformation.trainNumber}}</span><span>{{transferInformation.travelTime}}</span><span>{{transferInformation.price}}元</span></p>
-                  <span class="treroad-searchResults-transferInformation-arrivalthoughLine"></span>
+                  <span v-bind:style="{'background': classfyColor(transferInformation.trainClassification)}" class="treroad-searchResults-transferInformation-arrivalthoughLine"></span>
                 </div>
                 <div v-if="index != shift.transferInformation.length - 1" class="treroad-searchResults-transferInformation-transferStation">
                   <p class="treroad-searchResults-transferInformation-arrivalTime">{{transferInformation.arrivalTime}}</p>
@@ -67,7 +68,7 @@
                   <span class="treroad-searchResults-transferInformation-circle"></span>
                   <span class="treroad-searchResults-transferInformation-circle"></span>
                   <span class="treroad-searchResults-transferInformation-departureLine"></span>
-                  <span class="treroad-searchResults-transferInformation-arrivalLine"></span>
+                  <!-- <span class="treroad-searchResults-transferInformation-arrivalLine"></span> -->
                 </div>
                 <div v-if="index == shift.transferInformation.length - 1" class="treroad-searchResults-transferInformation-arrivalStation">
                   <p class="treroad-searchResults-transferInformation-arrivalTime">{{transferInformation.arrivalTime}}</p>
@@ -75,6 +76,7 @@
                   <p class="treroad-searchResults-transferInformation-station">{{transferInformation.arrivalStation}}</p>
                   <span class="treroad-searchResults-transferInformation-arrivalLine"></span>
                 </div>
+                <!-- <div class="">asdfasdf</div> -->
               </div>
             </div>
           </div>
@@ -709,7 +711,7 @@ export default {
                   width: 5px
                   height: 23px
                   position: absolute
-                  background: rgb(100, 181, 246)
+                  // background: rgb(100, 181, 246)
                   left: 61px
                   bottom: 0
                 .treroad-searchResults-transferInformation-arrivalLine
@@ -784,11 +786,11 @@ export default {
                   color: rgb(74, 74, 74)
                 .treroad-searchResults-transferInformation-arrivalthoughLine
                   width: 5px
-                  height: 100%
+                  height: calc(100% + 17px)
                   position: absolute
                   background: rgb(100, 181, 246)
                   left: 61px
-                  top: 0
+                  top: -8px
                 p
                   position: absolute
                   top: 16px
