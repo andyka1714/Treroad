@@ -21,12 +21,12 @@ export default {
   .lds-ellipsis {
     display: inline-block;
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: 64px !important;
+    height: 100% !important;
   }
   .lds-ellipsis div {
     position: absolute;
-    top: 27px;
+    top: 14px;
     width: 11px;
     height: 11px;
     border-radius: 50%;
