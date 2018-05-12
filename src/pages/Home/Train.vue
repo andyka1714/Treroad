@@ -27,7 +27,7 @@
         分
       </div>
     </div>
-    <button class="treroad-train-startSearch" @click="getResult()">開始查詢</button>
+    <button class="treroad-train-startSearch" @click="getResult()">開始查詢</button>    
     <div v-if="areaShow" class="treroad-train-areaBackground">
       <div class="treroad-train-area">
         <p>北部</p>
@@ -66,8 +66,12 @@
 <script>
 import axios from 'axios'
 import stationPart from '../../../static/json/stationPart.json'
+import Loading from '@/components/Loading'
 export default {
   props: {},
+  components:{
+    Loading
+  },
   data () {
     return {
       trainStationList: {},
@@ -102,7 +106,6 @@ export default {
       return this.selectStation.arrivalStation !== '終點站'
     }
   },
-  components: {},
   watch: {},
   mixins: [],
   methods: {
