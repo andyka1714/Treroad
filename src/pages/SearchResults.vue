@@ -34,7 +34,7 @@
               </div>
               <div class="treroad-searchResults-trainInformation-driveTime">
                 <p class="treroad-searchResults-trainInformation-title">行車時間</p>
-                <p class="treroad-searchResults-trainInformation-value">{{shift.trainInformation.travelTime}}</p>
+                <p class="treroad-searchResults-trainInformation-value">{{travelTimeFormat(shift.trainInformation.travelTime)}}</p>
               </div>
               <div class="treroad-searchResults-trainInformation-fare">
                 <p class="treroad-searchResults-trainInformation-title">費用</p>
@@ -121,6 +121,17 @@ export default {
   watch: {},
   mixins: [],
   methods: {
+    travelTimeFormat(time){
+      if(time.includes("時")){
+        let hour = time.split('時')[0]
+        let min = time.split('時')[1].split('分')[0]
+        return `${hour} 時 ${min} 分`
+      }
+      else {
+        let min = time.split('分')[0]
+        return `${min} 分`
+      }
+    },
     //車種顏色條
     classfyColor(classfyColor){
       switch (classfyColor) {
