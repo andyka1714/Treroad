@@ -153,6 +153,7 @@ export default {
       // console.log(transferInformation[index])
       // console.log(index)
 
+
       transferInformation.forEach(information => {
         if(information == transferInformation[index]) return
         information.style.display = 'none'
@@ -454,6 +455,14 @@ export default {
       this.searchTime.day = this.searchTime.day.split("-")
     },
     moveToNowTrain () {
+      var trainInformation = document.querySelectorAll('.treroad-searchResults-trainInformation')
+      console.log(trainInformation)
+      if(this.searchType == 'train'){
+        trainInformation.forEach(information => {
+          information.style.cursor = 'pointer'
+        })
+      }
+
       var trainAfterNow = this.shiftList.filter(shift => {
         if(this.searchType == 'train'){
           var shiftHour = Number(shift.trainInformation.departureTime.split(":")[0])
@@ -595,7 +604,6 @@ export default {
             align-items: center
             box-sizing: border-box
             position: relative
-            cursor: pointer
             background: white
             border-bottom: 1px solid rgb(219, 219, 219)
             @media screen and (max-width: 600px)
