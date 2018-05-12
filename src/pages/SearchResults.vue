@@ -20,6 +20,11 @@
             <label for="rideTime">行車時間</label>
           </div>
           <div v-if="searchType == 'train'" v-for="(shift, index) in shiftList" class="treroad-searchResults-searchResultList" @click="toggleShowInformation(shift)">
+            <div class="search-result-bar">
+              <div v-for="transferPart in shift.transferInformation" class="bar-transfer-part" v-bind:style="{'background-color': classfyColor(transferPart.trainClassification)}">
+                {{transferPart.trainClassification}}
+              </div>
+            </div>
             <div class="treroad-searchResults-trainInformation" id="trainInformation">
               <img class="treroad-searchResults-trainInformation-trainIcon" src="../assets/train-icon.png" alt="train">
               <div class="treroad-searchResults-trainInformation-mobileTrainLabel"></div>
@@ -116,6 +121,31 @@ export default {
   watch: {},
   mixins: [],
   methods: {
+    //車種顏色條
+    classfyColor(classfyColor){
+      switch (classfyColor) {
+          case '自強':
+            return 'rgb(80, 227, 194)'
+            break;
+          case '太魯閣':
+            return 'rgb(126, 211, 33)'
+            break;
+          case '區間':
+            return 'rgb(100, 181, 246)'
+            break;
+          case '莒光':
+            return 'rgb(255, 214, 0)'
+            break;
+          case '高鐵':
+            return 'rgb(251, 137, 6)'
+            break;
+          case '普悠瑪':
+            return 'rgb(234, 88, 114)'
+            break;
+          default:
+            return 'rgb(80, 227, 194)'
+      }
+    },
     toggleShowInformation(shift){
       var transferInformation = document.querySelectorAll(".treroad-searchResults-transferInformation")
       var downIcon = document.querySelectorAll('.treroad-searchResults-trainInformation-downIcon')
@@ -549,6 +579,14 @@ export default {
           margin-bottom: 8px
           @media screen and (max-width: 600px)
             border-radius: 0
+          .search-result-bar
+            background-color: rgb(100, 181, 246)
+            display: flex
+            line-height: 1.5em
+            .bar-transfer-part
+              padding-left: 20px
+              flex-grow: 1
+              flex-basis: 0
           .treroad-searchResults-trainInformation
             width: 100%
             height: 100%
