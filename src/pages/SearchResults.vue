@@ -88,7 +88,7 @@
               </div>
               <div class="treroad-searchResults-trainInformation-driveTime">
                 <p class="treroad-searchResults-trainInformation-title">行車時間</p>
-                <p class="treroad-searchResults-trainInformation-value">{{shift.travelTime}}</p>
+                <p class="treroad-searchResults-trainInformation-value">{{travelTimeFormat(shift.travelTime)}}</p>
               </div>
               <div class="treroad-searchResults-trainInformation-fare">
                 <p class="treroad-searchResults-trainInformation-title">費用</p>
