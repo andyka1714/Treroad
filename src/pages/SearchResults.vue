@@ -35,7 +35,7 @@
                 <p class="treroad-searchResults-trainInformation-title">費用</p>
                 <p class="treroad-searchResults-trainInformation-value">{{shift.trainInformation.price}}</p>
               </div>
-              <div v-if="searchType == train" class="treroad-searchResults-trainInformation-numberOfTransfer">
+              <div v-if="searchType == 'train'" class="treroad-searchResults-trainInformation-numberOfTransfer">
                 <p class="treroad-searchResults-trainInformation-title">轉乘</p>
                 <p class="treroad-searchResults-trainInformation-value">{{shift.trainInformation.transfer}}</p>
               </div>
@@ -137,7 +137,7 @@ export default {
       }else{
         downIcon[index].style.transform = 'rotate(-180deg)'
       }
-     
+
       if(transferInformation[index].style.display == 'block') {
         transferInformation[index].style.display = 'none'
       }else{
@@ -151,7 +151,7 @@ export default {
     // },
     getResult () {
       this.searchTime = this.$store.state.searchTime
-      
+
       this.selectStation.departureStation = this.$store.state.departureStation
       this.selectStation.arrivalStation = this.$store.state.arrivalStation
       this.searchType = this.$store.state.searchType
@@ -202,7 +202,7 @@ export default {
           }
         var transferInformation = []
         shift.forEach((train, index) => {
-          
+
           //-----------------------trainInformation-----------------------
           //trainOfTrainClassification
           // trainInformation.trainClassification = shift[0].trainClassification
@@ -210,7 +210,8 @@ export default {
             trainInformation.trainClassification = '自強'
           }else if(shift[0].trainClassification == '1115' || shift[0].trainClassification == '1110' || shift[0].trainClassification == '1112' || shift[0].trainClassification == '1111' || shift[0].trainClassification == '1113' || shift[0].trainClassification == '1114'){
             trainInformation.trainClassification = '莒光'
-          }else if(shift[0].trainClassification == '1131' || shift[0].trainClassification == '1132' || shift[0].trainClassification == '1135' || shift[0].trainClassification == '1120' || shift[0].trainClassification == '1122' || shift[0].trainClassification == '1121' || shift[0].trainClassification == '1140' || shift[0].trainClassification == '1130' || shift[0].trainClassification == '1133' || shift[0].trainClassification == '1151'){
+          }else if(shift[0].trainClassification == '1131' || shift[0].trainClassification == '1132' || shift[0].trainClassification == '1135' || shift[0].trainClassification == '1120' || shift[0].trainClassification == '1122' || shift[0].trainClassification == '1121' || shift[0].trainClassification == '1140'
+          || shift[0].trainClassification == '1130' || shift[0].trainClassification == '1133' || shift[0].trainClassification == '1151'){
             trainInformation.trainClassification = '區間'
           }else if(shift[0].trainClassification == '1102'){
             trainInformation.trainClassification = '太魯閣'
@@ -281,7 +282,7 @@ export default {
           //trainOfTransfer
           trainInformation.transfer = shift.length - 1
 
-          
+
           //-----------------------transferInformation-----------------------
           transferInformation.push(Object.assign({}, transferInformationList))
 
@@ -291,7 +292,8 @@ export default {
             transferInformation[index].trainClassification = '自強'
           }else if(shift[index].trainClassification == '1115' || shift[index].trainClassification == '1110' || shift[index].trainClassification == '1112' || shift[index].trainClassification == '1111' || shift[index].trainClassification == '1113' || shift[index].trainClassification == '1114'){
             transferInformation[index].trainClassification = '莒光'
-          }else if(shift[index].trainClassification == '1131' || shift[index].trainClassification == '1132' || shift[index].trainClassification == '1135' || shift[index].trainClassification == '1120' || shift[index].trainClassification == '1122' || shift[index].trainClassification == '1121' || shift[index].trainClassification == '1140' || shift[index].trainClassification == '1130' || shift[index].trainClassification == '1133' || shift[index].trainClassification == '1151'){
+          }else if(shift[index].trainClassification == '1131' || shift[index].trainClassification == '1132' || shift[index].trainClassification == '1135' || shift[index].trainClassification == '1120' || shift[index].trainClassification == '1122' || shift[index].trainClassification == '1121' || shift[index].trainClassification == '1140'
+          || shift[index].trainClassification == '1130' || shift[index].trainClassification == '1133' || shift[index].trainClassification == '1151'){
             transferInformation[index].trainClassification = '區間'
           }else if(shift[index].trainClassification == '1102'){
             transferInformation[index].trainClassification = '太魯閣'
@@ -301,7 +303,7 @@ export default {
 
           //transferOfTrainNumber
           transferInformation[index].trainNumber = shift[index].trainNumber
-          
+
           //transferOfDepartureTime
           var transferDepartureTime = shift[index].routes[0].departureTime
           var transferDepartureDate = new Date(transferDepartureTime)
@@ -319,13 +321,13 @@ export default {
           if(transferArrivalHour < 10) transferArrivalHour = `0${transferArrivalHour}`
           if(transferArrivalMinute < 10) transferArrivalMinute = `0${transferArrivalMinute}`
           transferInformation[index].arrivalTime = `${transferArrivalHour}:${transferArrivalMinute}`
-          
+
           //transferOfDepartureStation
           transferInformation[index].departureStation = shift[index].routes[0].departureStationName
 
           //transferOfArrivalStation
           transferInformation[index].arrivalStation = shift[index].routes[shift[index].routes.length - 1].arrivalStationName
-          
+
           //transferOfTravelTime
           var transferTravelHours = transferArrivalHour - transferDepartureHour
           if(transferTravelHours < 0) transferTravelHours = transferTravelHours + 24
@@ -340,7 +342,7 @@ export default {
           }else{
             transferInformation[index].travelTime = `${transferRealTravelMinutes}分`
           }
-          
+
           //transferOfPrice
           transferInformation[index].price = shift[index].price
         })
@@ -409,7 +411,7 @@ export default {
         }else{
           trainInformation.travelTime = `${trainRealTravelMinutes}分`
         }
-        
+
         //thsrOfPrice
         trainInformation.price = shiftList.price.標準
 
@@ -430,7 +432,7 @@ export default {
           var shiftHour = Number(shift.departureTime.split(":")[0])
           var shiftMinute = Number(shift.departureTime.split(":")[1])
         }
-        
+
         var nowHour = this.searchTime.time.hour
         var nowMinute = this.searchTime.time.minute
         return shiftHour * 60 + shiftMinute > nowHour * 60 + nowMinute
@@ -456,7 +458,7 @@ export default {
 
 <style lang="sass" scoped>
 *
-  scroll-behavior: smooth;
+  scroll-behavior: smooth
   .treroad-searchResults-page
     width: 100%
     .treroad-searchResults-resultHeader
@@ -734,5 +736,5 @@ export default {
                   position: absolute
                   top: 16px
                   left: 92px
-                
+
 </style>
