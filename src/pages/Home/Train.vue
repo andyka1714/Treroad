@@ -16,7 +16,7 @@
     </div>
     <div class="treroad-train-selectTime">
       <p>選擇時間</p>
-      <input type="date" :min="'2018-05-12'" v-model="searchTime.day">
+      <input type="date" :min="restrictDate" v-model="searchTime.day">
       <!-- <select name="" id="">
         <option value="">今天 10月30日</option>
       </select> -->

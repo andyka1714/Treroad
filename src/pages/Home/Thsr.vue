@@ -16,7 +16,7 @@
     </div>
     <div class="treroad-thsr-selectTime">
       <p>選擇時間</p>
-      <input type="date" v-model="searchTime.day">
+      <input type="date" :min="restrictDate" v-model="searchTime.day">
       <!-- <select name="" id="">
         <option value="">今天 10月30日</option>
       </select> -->
@@ -46,6 +46,7 @@ export default {
   props: {},
   data () {
     return {
+      restrictDate:new Date().toJSON().slice(0,10),
       trainStationList: [],
       selectStation: {
         selectType: '',
