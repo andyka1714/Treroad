@@ -39,6 +39,7 @@ export default {
   margin: 0
   padding: 0
   list-style: none
+  font-family: PingFangTC-Regular
 #app
   header
     width: 100%
@@ -48,6 +49,9 @@ export default {
     box-sizing: border-box
     display: flex
     justify-content: space-between
+    position: sticky
+    top: 0
+    z-index: 10
     .treroad-app-logo, .treroad-app-about
       display: inline-block
       vertical-align: top

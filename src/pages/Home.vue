@@ -42,8 +42,8 @@ export default {
 <style lang="sass" scoped>
   .treroad-home-background
     width: 100%
-    height: 540px
-    padding: 45px 15px
+    // height: 540px
+    padding: 45px 15px 70px 15px
     background: url(../assets/bg.jpg) center
     background-size: cover
     box-sizing: border-box

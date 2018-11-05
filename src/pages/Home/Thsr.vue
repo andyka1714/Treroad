@@ -1,63 +1,40 @@
 <template>
-<div class="treroad-train-search">
-  <div class="treroad-train-switch">
-    <div class="treroad-train-trainSwitch"></div>
-    <div class="treroad-train-thsrSwitch"></div>
-    <div class="treroad-train-mrtSwitch"></div>
-    <span class="treroad-train-trainSwitchSpan">台鐵查詢</span>
-    <router-link to="thsr"><span class="treroad-train-thsrSwitchSpan">高鐵查詢</span></router-link>
-    <router-link to="mrt"><span class="treroad-train-mrtSwitchSpan">捷運轉乘</span></router-link>
+<div class="treroad-thsr-search">
+  <div class="treroad-thsr-switch">
+    <div class="treroad-thsr-trainSwitch"></div>
+    <div class="treroad-thsr-thsrSwitch"></div>
+    <div class="treroad-thsr-mrtSwitch"></div>
+    <router-link to="train"><span class="treroad-thsr-trainSwitchSpan">台鐵查詢</span></router-link>
+    <span class="treroad-thsr-thsrSwitchSpan">高鐵查詢</span>
+    <router-link to="mrt"><span class="treroad-thsr-mrtSwitchSpan">捷運轉乘</span></router-link>
   </div>
-  <div class="treroad-train-selectStation">
+  <div class="treroad-thsr-selectStation">
     <p>選擇站名</p>
     <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
     <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
-    <img @click="stationExchange()" class="treroad-train-transfer" src="../../assets/iconTransfer.png" alt="transfer">
+    <img @click="stationExchange()" class="treroad-thsr-transfer" src="../../assets/iconTransfer.png" alt="transfer">
   </div>
-  <div class="treroad-train-selectTime">
+  <div class="treroad-thsr-selectTime">
     <p>選擇時間</p>
     <input type="date" :min="restrictDate" v-model="searchTime.day">
     <!-- <select name="" id="">
         <option value="">今天 10月30日</option>
       </select> -->
-    <div class="treroad-train-hourAndMinute">
+    <div class="treroad-thsr-hourAndMinute">
       <input type="text" maxlength="2" v-model="searchTime.time.hour"> 時
       <input type="text" maxlength="2" v-model="searchTime.time.minute"> 分
     </div>
   </div>
-  <button class="treroad-train-startSearch" @click="getResult()">
+  <button class="treroad-thsr-startSearch" @click="getResult()">
       <span v-if="!isLoading">開始查詢</span>
       <Loading v-if="isLoading">
       </Loading>
     </button>
-  <div v-if="areaShow" class="treroad-train-areaBackground">
-    <div class="treroad-train-area">
-      <p>北部</p>
+  <div v-if="stationShow" class="treroad-thsr-stationBackground">
+    <div class="treroad-thsr-station">
+      <p>高鐵列表</p>
       <ul>
-        <li v-for="(area, key) in areaPart('北部')" @click="getArea(area)">{{area}}</li>
-      </ul>
-      <p>中部</p>
-      <ul>
-        <li v-for="(area, key) in areaPart('中部')" @click="getArea(area)">{{area}}</li>
-      </ul>
-      <p>南部</p>
-      <ul>
-        <li v-for="(area, key) in areaPart('南部')" @click="getArea(area)">{{area}}</li>
-      </ul>
-      <p>東部</p>
-      <ul>
-        <li v-for="(area, key) in areaPart('東部')" @click="getArea(area)">{{area}}</li>
-      </ul>
-      <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
-    </div>
-  </div>
-  <div v-if="stationShow" class="treroad-train-stationBackground">
-    <div class="treroad-train-station">
-      <p>台鐵列表</p>
-      <span>{{selectStation.area}}</span>
-      <button @click="returnArea()">返回地區</button>
-      <ul>
-        <li v-for="station in stationData" @click="getStation(station)">{{station}}</li>
+        <li v-for="(station, index) in trainStationList" @click="getStation(station)">{{station}}</li>
       </ul>
       <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
     </div>
@@ -66,22 +43,17 @@
 </template>
 
 <script>
-import axios from 'axios'
-import stationPart from '../../../static/json/stationPart.json'
 import Loading from '@/components/Loading'
+import axios from 'axios'
 export default {
   props: {},
-  components: {
-    Loading
-  },
   data() {
     return {
-      restrictDate: new Date().toJSON().slice(0, 10),
       isLoading: false,
-      trainStationList: {},
+      restrictDate: new Date().toJSON().slice(0, 10),
+      trainStationList: [],
       selectStation: {
         selectType: '',
-        area: '',
         departureStation: '起始站',
         arrivalStation: '終點站',
       },
@@ -93,40 +65,32 @@ export default {
         },
         week: ['日', '一', '二', '三', '四', '五', '六']
       },
-      areaShow: false,
       stationShow: false,
-      searchType: 'tra'
+      searchType: 'thsr'
     }
   },
   computed: {
-    stationData() {
-      var area = this.selectStation.area
-      return this.trainStationList[area]
-    },
     departureSelected() {
       return this.selectStation.departureStation !== '起始站'
     },
     arrivalSelected() {
       return this.selectStation.arrivalStation !== '終點站'
-    },
-    // restrictDate(){
-    //   new Date().toLocaleDateString().replace(/\//g,'-')
-    // }
+    }
+  },
+  components: {
+    Loading
   },
   watch: {},
   mixins: [],
   methods: {
-    areaPart(part) {
-      return stationPart[part]
-    },
-    getTrainStation() {
+    getThsrStation() {
       axios({
           method: 'get',
           url: '/static/json/station.json'
         })
         .then((response) => {
-          console.log(response.data.train)
-          this.trainStationList = response.data.train
+          console.log(response.data.thsr)
+          this.trainStationList = response.data.thsr
           console.log(this.trainStationList)
         })
     },
@@ -152,7 +116,6 @@ export default {
     getArea(key) {
       console.log(key)
       this.selectStation.area = key
-      this.areaShow = false
       this.stationShow = true
     },
     getStation(station) {
@@ -170,25 +133,18 @@ export default {
           this.selectStation.arrivalStation = station
         }
       }
-
-      this.areaShow = false
-      this.stationShow = false
-    },
-    returnArea() {
-      this.areaShow = true
       this.stationShow = false
     },
     closeSelectBlock() {
-      this.areaShow = false
       this.stationShow = false
     },
     selectDepartureArea() {
-      this.areaShow = true
+      this.stationShow = true
       this.selectType = 'departure'
       console.log(this.selectType)
     },
     selectArrivalArea() {
-      this.areaShow = true
+      this.stationShow = true
       this.selectType = 'arrival'
       console.log(this.selectType)
     },
@@ -219,14 +175,14 @@ export default {
   // Life cycle hook
   beforeCreate() {},
   mounted() {
-    this.getTrainStation(),
+    this.getThsrStation(),
       this.getDate()
   }
 }
 </script>
 
 <style lang="sass" scoped>
-  .treroad-train-search
+  .treroad-thsr-search
     position: relative
     width: 480px
     min-height: 205px
@@ -246,7 +202,7 @@ export default {
       width: 45%
       height: auto
       color: rgb(74, 74, 74)
-    .treroad-train-switch
+    .treroad-thsr-switch
       display: flex
       justify-content: space-around
       width: 350px
@@ -259,7 +215,7 @@ export default {
         z-index: 2
         margin-top: 15px
         text-decoration: none
-      .treroad-train-trainSwitch, .treroad-train-thsrSwitch, .treroad-train-mrtSwitch
+      .treroad-thsr-trainSwitch, .treroad-thsr-thsrSwitch, .treroad-thsr-mrtSwitch
         width: 30%
         height: 100%
         position: absolute
@@ -267,29 +223,29 @@ export default {
         transform: perspective(.5em) rotateX(2deg)
         bottom: -10px
         box-shadow: 0px 2px 4px rgba(0, 0, 0, .1)
-      .treroad-train-trainSwitch
-        background: #eff2f5
-        left: 5%
-        z-index: 1
-      .treroad-train-thsrSwitch
+      .treroad-thsr-trainSwitch
         background: #44c7a8
+        left: 5%
+      .treroad-thsr-thsrSwitch
+        background: #eff2f5
         left: 35%
-      .treroad-train-mrtSwitch
+        z-index: 1
+      .treroad-thsr-mrtSwitch
         background: #44c7a8
         right: 5%
-      .treroad-train-mrtSwitchSpan, .treroad-train-thsrSwitchSpan, .treroad-train-trainSwitchSpan
+      .treroad-thsr-mrtSwitchSpan, .treroad-thsr-thsrSwitchSpan, .treroad-thsr-trainSwitchSpan
         position: absolute
         top: 15px
         color: white
         z-index: 2
-      .treroad-train-trainSwitchSpan
-        color: #4a4a4a
+      .treroad-thsr-trainSwitchSpan
         left: calc(50% - 138px)
-      .treroad-train-thsrSwitchSpan
+      .treroad-thsr-thsrSwitchSpan
+        color: #4a4a4a
         left: calc(50% - 32px)
-      .treroad-train-mrtSwitchSpan
+      .treroad-thsr-mrtSwitchSpan
         left: calc(50% + 73px)
-    .treroad-train-selectStation
+    .treroad-thsr-selectStation
       position: relative
       @media screen and (max-width: 515px)
         width: 100%
@@ -307,12 +263,12 @@ export default {
         cursor: pointer
       .selected
         color: #4a4a4a
-      .treroad-train-transfer
+      .treroad-thsr-transfer
         position: absolute
         bottom: 30px
         left: calc(50% - 14px)
         cursor: pointer
-    .treroad-train-selectTime
+    .treroad-thsr-selectTime
       @media screen and (max-width: 515px)
         width: 100%
         margin-top: 20px
@@ -331,7 +287,7 @@ export default {
         background-position: 95% center
         box-sizing: border-box
         @media screen and (max-width: 515px)
-          width: 49%
+          width: 48%
           background: white
       input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button
         display: none
@@ -339,7 +295,7 @@ export default {
         opacity: 0
         cursor: pointer
         background: transparent
-      .treroad-train-hourAndMinute
+      .treroad-thsr-hourAndMinute
         width: 100%
         height: 35px
         margin-top: 14px
@@ -347,7 +303,7 @@ export default {
         @media screen and (max-width: 515px)
           width: 50%
           display: inline
-          margin-left: 3px
+          margin-left: 5px
           letter-spacing: 0
         input
           width: 48px
@@ -362,7 +318,7 @@ export default {
           @media screen and (max-width: 515px)
             width: 44px
             margin-right: 0
-    .treroad-train-startSearch
+    .treroad-thsr-startSearch
       width: 120px
       height: 36px
       border-radius: 18px
@@ -375,12 +331,7 @@ export default {
       cursor: pointer
       border: 0px
       outline: 0
-    .treroad-train-loading
-      height: 20px
-      position: absolute
-      left: calc(50% - 28px)
-      bottom: 0px
-    .treroad-train-areaBackground
+    .treroad-thsr-stationBackground
       position: fixed
       top: 0
       left: 0
@@ -388,10 +339,10 @@ export default {
       width: 100vw
       height: 100vh
       background: rgba(0, 0, 0, .4)
-      .treroad-train-area
+      .treroad-thsr-station
         position: relative
-        width: 677px
-        min-height: 285px
+        width: 665px
+        min-height: 205px
         padding: 8px 10px
         background: white
         border-radius: 18px
@@ -409,63 +360,6 @@ export default {
             display: inline-block
             height: 36px
             min-width: 98px
-            padding: 5px 16.5px
-            border: 1px solid rgb(70, 207, 175)
-            border-radius: 18px
-            box-sizing: border-box
-            margin: 8px 4px
-            cursor: pointer
-        img
-          position: absolute
-          top: 2px
-          right: 6px
-          cursor: pointer
-    .treroad-train-stationBackground
-      position: fixed
-      top: 0
-      left: 0
-      z-index: 2
-      width: 100vw
-      height: 100vh
-      background: rgba(0, 0, 0, .4)
-      .treroad-train-station
-        position: relative
-        width: 665px
-        min-height: 205px
-        padding: 8px 10px
-        background: white
-        border-radius: 18px
-        margin: 195px auto 0 auto
-        box-sizing: border-box
-        @media screen and (max-width: 680px)
-          width: 95%
-        p
-          margin: 8px 4px
-          font-size: 20px
-          rgb(74, 74, 74)
-        span
-          display: block
-          margin: 8px 4px
-          font-size: 16px
-          rgb(74, 74, 74)
-        button
-          position: absolute
-          top: 50px
-          right: 37px
-          width: 90px
-          height: 28px
-          color: white
-          background: rgb(245, 166, 35)
-          border-radius: 4px
-          border: 0
-          font-size: 16px
-          cursor: pointer
-        ul
-          li
-            text-align: center
-            display: inline-block
-            height: 36px
-            min-width: 68px
             padding: 5px 16.5px
             border: 1px solid rgb(70, 207, 175)
             border-radius: 18px
