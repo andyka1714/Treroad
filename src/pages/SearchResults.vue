@@ -19,7 +19,7 @@
         <input type="radio" name="filter" id="rideTime">
         <label for="rideTime">行車時間</label>
       </div>
-      <div v-if="searchType == 'train'" v-for="(shift, index) in shiftList" class="treroad-searchResults-searchResultList" @click="toggleShowInformation(shift)">
+      <div v-if="searchType == 'tra'" v-for="(shift, index) in shiftList" class="treroad-searchResults-searchResultList" @click="toggleShowInformation(shift)">
         <div class="search-result-bar">
           <div v-for="transferPart in shift.transferInformation" class="bar-transfer-part" v-bind:style="{'background-color': classfyColor(transferPart.trainClassification)}">
             {{transferPart.trainClassification}}
@@ -40,7 +40,7 @@
             <p class="treroad-searchResults-trainInformation-title">費用</p>
             <p class="treroad-searchResults-trainInformation-value">{{shift.trainInformation.price}}</p>
           </div>
-          <div v-if="searchType == 'train'" class="treroad-searchResults-trainInformation-numberOfTransfer">
+          <div v-if="searchType == 'tra'" class="treroad-searchResults-trainInformation-numberOfTransfer">
             <p class="treroad-searchResults-trainInformation-title">轉乘</p>
             <p class="treroad-searchResults-trainInformation-value">{{shift.trainInformation.transfer}}</p>
           </div>
@@ -139,7 +139,7 @@ export default {
       console.log(shiftList)
 
       console.log(this.searchType)
-      if (this.searchType == 'train') {
+      if (this.searchType == 'tra') {
         this.changeTrainInformation(shiftList)
       } else if (this.searchType == 'thsr') {
         this.changeThsrformation(shiftList)
@@ -214,16 +214,6 @@ export default {
       this.selectStation.departureStation = this.$route.params.departureStation
       this.selectStation.arrivalStation = this.$route.params.arrivalStation
       this.searchType = this.$route.params.transportation
-      //
-      // var shiftList = this.$store.getters.getResult
-      // console.log(shiftList)
-      //
-      // console.log(this.searchType)
-      // if (this.searchType == 'train') {
-      //   this.changeTrainInformation(shiftList)
-      // } else if (this.searchType == 'thsr') {
-      //   this.changeThsrformation(shiftList)
-      // }
     },
     changeTrainInformation(shiftList) {
       console.log(shiftList)
@@ -460,14 +450,14 @@ export default {
     moveToNowTrain() {
       var trainInformation = document.querySelectorAll('.treroad-searchResults-trainInformation')
       console.log(trainInformation)
-      if (this.searchType == 'train') {
+      if (this.searchType == 'tra') {
         trainInformation.forEach(information => {
           information.style.cursor = 'pointer'
         })
       }
 
       var trainAfterNow = this.shiftList.filter(shift => {
-        if (this.searchType == 'train') {
+        if (this.searchType == 'tra') {
           var shiftHour = Number(shift.trainInformation.departureTime.split(":")[0])
           var shiftMinute = Number(shift.trainInformation.departureTime.split(":")[1])
         } else if (this.searchType == 'thsr') {

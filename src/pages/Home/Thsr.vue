@@ -109,15 +109,9 @@ export default {
         this.isLoading = false
         return
       }
-      axios({
-          method: 'get',
-          url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=thsr`
-        })
-        .then((response) => {
-          vm.$router.push({
-            path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchTime.time.hour}/${this.searchTime.time.minute}/${this.searchType}`
-          })
-        })
+      vm.$router.push({
+        path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchTime.time.hour}/${this.searchTime.time.minute}/${this.searchType}`
+      })
     },
     getArea(key) {
       console.log(key)

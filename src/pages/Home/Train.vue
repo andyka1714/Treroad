@@ -1,70 +1,68 @@
 <template>
-  <div class="treroad-train-search">
-    <div class="treroad-train-switch">
-      <div class="treroad-train-trainSwitch"></div>
-      <div class="treroad-train-thsrSwitch"></div>
-      <div class="treroad-train-mrtSwitch"></div>
-      <span class="treroad-train-trainSwitchSpan">台鐵查詢</span>
-      <router-link to="thsr"><span class="treroad-train-thsrSwitchSpan">高鐵查詢</span></router-link>
-      <router-link to="mrt"><span class="treroad-train-mrtSwitchSpan">捷運轉乘</span></router-link>
-    </div>
-    <div class="treroad-train-selectStation">
-      <p>選擇站名</p>
-      <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
-      <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
-      <img @click="stationExchange()" class="treroad-train-transfer" src="../../assets/iconTransfer.png" alt="transfer">
-    </div>
-    <div class="treroad-train-selectTime">
-      <p>選擇時間</p>
-      <input type="date" :min="restrictDate" v-model="searchTime.day">
-      <!-- <select name="" id="">
+<div class="treroad-train-search">
+  <div class="treroad-train-switch">
+    <div class="treroad-train-trainSwitch"></div>
+    <div class="treroad-train-thsrSwitch"></div>
+    <div class="treroad-train-mrtSwitch"></div>
+    <span class="treroad-train-trainSwitchSpan">台鐵查詢</span>
+    <router-link to="thsr"><span class="treroad-train-thsrSwitchSpan">高鐵查詢</span></router-link>
+    <router-link to="mrt"><span class="treroad-train-mrtSwitchSpan">捷運轉乘</span></router-link>
+  </div>
+  <div class="treroad-train-selectStation">
+    <p>選擇站名</p>
+    <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
+    <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
+    <img @click="stationExchange()" class="treroad-train-transfer" src="../../assets/iconTransfer.png" alt="transfer">
+  </div>
+  <div class="treroad-train-selectTime">
+    <p>選擇時間</p>
+    <input type="date" :min="restrictDate" v-model="searchTime.day">
+    <!-- <select name="" id="">
         <option value="">今天 10月30日</option>
       </select> -->
-      <div class="treroad-train-hourAndMinute">
-        <input type="text" maxlength="2" v-model="searchTime.time.hour">
-        時
-        <input type="text" maxlength="2" v-model="searchTime.time.minute">
-        分
-      </div>
+    <div class="treroad-train-hourAndMinute">
+      <input type="text" maxlength="2" v-model="searchTime.time.hour"> 時
+      <input type="text" maxlength="2" v-model="searchTime.time.minute"> 分
     </div>
-    <button class="treroad-train-startSearch" @click="getResult()">
+  </div>
+  <button class="treroad-train-startSearch" @click="getResult()">
       <span v-if="!isLoading">開始查詢</span>
       <Loading v-if="isLoading">
       </Loading>
     </button>
-    <div v-if="areaShow" class="treroad-train-areaBackground">
-      <div class="treroad-train-area">
-        <p>北部</p>
-        <ul>
-          <li v-for="(area, key) in areaPart('北部')" @click="getArea(area)">{{area}}</li>
-        </ul>
-        <p>中部</p>
-        <ul>
-          <li v-for="(area, key) in areaPart('中部')" @click="getArea(area)">{{area}}</li>
-        </ul>
-        <p>南部</p>
-        <ul>
-          <li v-for="(area, key) in areaPart('南部')" @click="getArea(area)">{{area}}</li>
-        </ul>
-        <p>東部</p>
-        <ul>
-          <li v-for="(area, key) in areaPart('東部')" @click="getArea(area)">{{area}}</li>
-        </ul>
-        <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
-      </div>
-    </div>
-    <div v-if="stationShow" class="treroad-train-stationBackground">
-      <div class="treroad-train-station">
-        <p>台鐵列表</p>
-        <span>{{selectStation.area}}</span>
-        <button @click="returnArea()">返回地區</button>
-        <ul>
-          <li v-for="station in stationData" @click="getStation(station)">{{station}}</li>
-        </ul>
-        <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
-      </div>
+  <div v-if="areaShow" class="treroad-train-areaBackground">
+    <div class="treroad-train-area">
+      <p>北部</p>
+      <ul>
+        <li v-for="(area, key) in areaPart('北部')" @click="getArea(area)">{{area}}</li>
+      </ul>
+      <p>中部</p>
+      <ul>
+        <li v-for="(area, key) in areaPart('中部')" @click="getArea(area)">{{area}}</li>
+      </ul>
+      <p>南部</p>
+      <ul>
+        <li v-for="(area, key) in areaPart('南部')" @click="getArea(area)">{{area}}</li>
+      </ul>
+      <p>東部</p>
+      <ul>
+        <li v-for="(area, key) in areaPart('東部')" @click="getArea(area)">{{area}}</li>
+      </ul>
+      <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
     </div>
   </div>
+  <div v-if="stationShow" class="treroad-train-stationBackground">
+    <div class="treroad-train-station">
+      <p>台鐵列表</p>
+      <span>{{selectStation.area}}</span>
+      <button @click="returnArea()">返回地區</button>
+      <ul>
+        <li v-for="station in stationData" @click="getStation(station)">{{station}}</li>
+      </ul>
+      <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -73,13 +71,13 @@ import stationPart from '../../../static/json/stationPart.json'
 import Loading from '@/components/Loading'
 export default {
   props: {},
-  components:{
+  components: {
     Loading
   },
-  data () {
+  data() {
     return {
-      restrictDate:new Date().toJSON().slice(0,10),
-      isLoading:false,
+      restrictDate: new Date().toJSON().slice(0, 10),
+      isLoading: false,
       trainStationList: {},
       selectStation: {
         selectType: '',
@@ -97,18 +95,18 @@ export default {
       },
       areaShow: false,
       stationShow: false,
-      searchType: 'train'
+      searchType: 'tra'
     }
   },
   computed: {
-    stationData () {
+    stationData() {
       var area = this.selectStation.area
       return this.trainStationList[area]
     },
-    departureSelected(){
+    departureSelected() {
       return this.selectStation.departureStation !== '起始站'
     },
-    arrivalSelected(){
+    arrivalSelected() {
       return this.selectStation.arrivalStation !== '終點站'
     },
     // restrictDate(){
@@ -118,66 +116,57 @@ export default {
   watch: {},
   mixins: [],
   methods: {
-    areaPart(part){
+    areaPart(part) {
       return stationPart[part]
     },
-    getTrainStation () {
+    getTrainStation() {
       axios({
-        method: 'get',
-        url: '/static/json/station.json'
-      })
-      .then((response) => {
-        console.log(response.data.train)
-        this.trainStationList = response.data.train
-        console.log(this.trainStationList)
-      })
+          method: 'get',
+          url: '/static/json/station.json'
+        })
+        .then((response) => {
+          console.log(response.data.train)
+          this.trainStationList = response.data.train
+          console.log(this.trainStationList)
+        })
     },
-    getResult () {
+    getResult() {
       let departureStation = this.selectStation.departureStation
       let arrivalStation = this.selectStation.arrivalStation
       let searchTime = this.searchTime.day.split("-").join('')
       let vm = this
       this.isLoading = true
-      axios({
-        method: 'get',
-        url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=tra`
-      })
-      .then((response) => {
-        // console.log(response.data.payload)
+      if (this.selectStation.departureStation == '起始站') {
+        alert('請選擇您要出發的站別～')
         this.isLoading = false
-        if(this.selectStation.departureStation == '起始站'){
-          alert('請選擇您要出發的站別～')
-          return
-        }else if(this.selectStation.arrivalStation == '終點站'){
-          alert('請選擇您要到達的站別～')
-          return
-        }
-        vm.$store.state.result = response.data.payload
-        vm.$store.state.searchTime = vm.searchTime
-        vm.$store.state.departureStation = vm.selectStation.departureStation
-        vm.$store.state.arrivalStation = vm.selectStation.arrivalStation
-        vm.$store.state.searchType = vm.searchType
-        vm.$router.push({ path: '/searchresults' })
+        return
+      } else if (this.selectStation.arrivalStation == '終點站') {
+        alert('請選擇您要到達的站別～')
+        this.isLoading = false
+        return
+      }
+      vm.$router.push({
+        path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchTime.time.hour}/${this.searchTime.time.minute}/${this.searchType}`
       })
     },
-    getArea (key) {
+    getArea(key) {
       console.log(key)
       this.selectStation.area = key
       this.areaShow = false
       this.stationShow = true
     },
-    getStation (station) {
+    getStation(station) {
       console.log(station)
-      if(this.selectType =='departure') {
-        if(this.selectStation.arrivalStation == station){
+      if (this.selectType == 'departure') {
+        if (this.selectStation.arrivalStation == station) {
           alert('起始站與終點站不能相同喲～')
-        }else{
+        } else {
           this.selectStation.departureStation = station
         }
-      }else if(this.selectType =='arrival') {
-        if(this.selectStation.departureStation == station){
+      } else if (this.selectType == 'arrival') {
+        if (this.selectStation.departureStation == station) {
           alert('起始站與終點站不能相同喲～')
-        }else{
+        } else {
           this.selectStation.arrivalStation = station
         }
       }
@@ -185,32 +174,32 @@ export default {
       this.areaShow = false
       this.stationShow = false
     },
-    returnArea () {
+    returnArea() {
       this.areaShow = true
       this.stationShow = false
     },
-    closeSelectBlock () {
+    closeSelectBlock() {
       this.areaShow = false
       this.stationShow = false
     },
-    selectDepartureArea () {
+    selectDepartureArea() {
       this.areaShow = true
       this.selectType = 'departure'
       console.log(this.selectType)
     },
-    selectArrivalArea () {
+    selectArrivalArea() {
       this.areaShow = true
       this.selectType = 'arrival'
       console.log(this.selectType)
     },
-    stationExchange () {
-      if(this.selectStation.departureStation == '起始站' || this.selectStation.arrivalStation == '終點站') return
+    stationExchange() {
+      if (this.selectStation.departureStation == '起始站' || this.selectStation.arrivalStation == '終點站') return
       var tem = ''
       tem = this.selectStation.departureStation
       this.selectStation.departureStation = this.selectStation.arrivalStation
       this.selectStation.arrivalStation = tem
     },
-    getDate () {
+    getDate() {
       var date = new Date()
       var year = date.getFullYear()
       var month = date.getMonth() + 1
@@ -218,9 +207,9 @@ export default {
       var hour = date.getHours()
       var minute = date.getMinutes()
       var week = date.getDay()
-      if(month < 10) month = '0' + month
-      if(day < 10) day = '0' + day
-      var today =`${year}-${month}-${day}`
+      if (month < 10) month = '0' + month
+      if (day < 10) day = '0' + day
+      var today = `${year}-${month}-${day}`
       this.searchTime.day = today
       this.searchTime.time.hour = hour
       this.searchTime.time.minute = minute
@@ -228,10 +217,10 @@ export default {
     }
   },
   // Life cycle hook
-  beforeCreate () {},
-  mounted () {
+  beforeCreate() {},
+  mounted() {
     this.getTrainStation(),
-    this.getDate()
+      this.getDate()
   }
 }
 </script>
