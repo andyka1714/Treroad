@@ -127,9 +127,25 @@ export default {
       searchType: ''
     }
   },
-  computed: {},
+  computed: {
+    result() {
+      return this.$store.getters.getResult
+    }
+  },
   components: {},
-  watch: {},
+  watch: {
+    result(newResult) {
+      var shiftList = newResult
+      console.log(shiftList)
+
+      console.log(this.searchType)
+      if (this.searchType == 'train') {
+        this.changeTrainInformation(shiftList)
+      } else if (this.searchType == 'thsr') {
+        this.changeThsrformation(shiftList)
+      }
+    }
+  },
   mixins: [],
   methods: {
     travelTimeFormat(time) {
@@ -173,8 +189,6 @@ export default {
       var index = this.shiftList.indexOf(shift)
       // console.log(transferInformation[index])
       // console.log(index)
-
-
       transferInformation.forEach(information => {
         if (information == transferInformation[index]) return
         information.style.display = 'none'
@@ -200,16 +214,16 @@ export default {
       this.selectStation.departureStation = this.$route.params.departureStation
       this.selectStation.arrivalStation = this.$route.params.arrivalStation
       this.searchType = this.$route.params.transportation
-
-      var shiftList = this.$store.getters.getResult
-      console.log(shiftList)
-
-      console.log(this.searchType)
-      if (this.searchType == 'train') {
-        this.changeTrainInformation(shiftList)
-      } else if (this.searchType == 'thsr') {
-        this.changeThsrformation(shiftList)
-      }
+      //
+      // var shiftList = this.$store.getters.getResult
+      // console.log(shiftList)
+      //
+      // console.log(this.searchType)
+      // if (this.searchType == 'train') {
+      //   this.changeTrainInformation(shiftList)
+      // } else if (this.searchType == 'thsr') {
+      //   this.changeThsrformation(shiftList)
+      // }
     },
     changeTrainInformation(shiftList) {
       console.log(shiftList)
@@ -255,24 +269,6 @@ export default {
             trainInformation.trainClassification = '普悠瑪'
           }
 
-          // switch(shift[0].trainClassification){
-          //   case '1108' || '1100' || '1101' || '1104' || '1106' || '1103' || '1105':
-          //     trainInformation.trainClassification = '自強'
-          //     break
-          //   case '1115' || '1110' || '1112' || '1111' || '1113' || '1114':
-          //     trainInformation.trainClassification = '莒光'
-          //     break
-          //   case '1131' || '1132' || '1135' || '1120' || '1122' || '1121' || '1140' || '1130' || '1133' || '1151':
-          //     trainInformation.trainClassification = '區間'
-          //     break
-          //   case '1102':
-          //     trainInformation.trainClassification = '太魯閣'
-          //     break
-          //   case '1107':
-          //     trainInformation.trainClassification = '太魯閣'
-          //     break
-          // }
-
           //trainOfTrainNumber
           trainInformation.trainNumber = shift[0].trainNumber
 
@@ -317,7 +313,6 @@ export default {
 
           //trainOfTransfer
           trainInformation.transfer = shift.length - 1
-
 
           //-----------------------transferInformation-----------------------
           transferInformation.push(Object.assign({}, transferInformationList))
@@ -524,8 +519,7 @@ export default {
       this.timeSort()
   },
   mounted() {
-    this.getResult(),
-      this.splitDay()
+    this.getResult()
   },
   updated() {
     this.moveToNowTrain()

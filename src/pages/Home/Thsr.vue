@@ -114,11 +114,6 @@ export default {
           url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=thsr`
         })
         .then((response) => {
-          vm.$store.state.result = response.data.payload
-          vm.$store.state.searchTime = vm.searchTime
-          vm.$store.state.departureStation = vm.selectStation.departureStation
-          vm.$store.state.arrivalStation = vm.selectStation.arrivalStation
-          vm.$store.state.searchType = vm.searchType
           vm.$router.push({
             path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchTime.time.hour}/${this.searchTime.time.minute}/${this.searchType}`
           })
@@ -127,7 +122,6 @@ export default {
     getArea(key) {
       console.log(key)
       this.selectStation.area = key
-      // this.areaShow = false
       this.stationShow = true
     },
     getStation(station) {

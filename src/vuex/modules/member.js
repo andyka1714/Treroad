@@ -10,9 +10,6 @@ const getters = {
   getResult(state) {
     return state.searchResult
   },
-  getSearchParams(state) {
-    return state.searchParams
-  }
 }
 
 const actions = {
