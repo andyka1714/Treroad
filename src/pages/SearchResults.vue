@@ -113,7 +113,16 @@ export default {
         departureStation: '',
         arrivalStation: '',
       },
-      searchTime: {},
+      searchTime: {
+        day: [],
+        time: {
+          hour: 0,
+          minute: 0,
+          stringHour: '',
+          stringMinute: ''
+        },
+        week: ''
+      },
       show: false,
       searchType: ''
     }
@@ -187,32 +196,13 @@ export default {
         transferInformation[index].style.display = 'block'
       }
     },
-    // moveToWatchingTrain (shift) {
-    //   var watchingTrainIndex = this.shiftList.indexOf(shift)
-    //   var watchingTrain = document.querySelectorAll('.treroad-searchResults-searchResultList')[watchingTrainIndex]
-    //   window.scrollTo(0, watchingTrain.offsetTop)
-    // },
     getResult() {
-      this.searchTime = this.$store.state.searchTime
+      this.selectStation.departureStation = this.$route.params.departureStation
+      this.selectStation.arrivalStation = this.$route.params.arrivalStation
+      this.searchType = this.$route.params.transportation
 
-      this.selectStation.departureStation = this.$store.state.departureStation
-      this.selectStation.arrivalStation = this.$store.state.arrivalStation
-      this.searchType = this.$store.state.searchType
-      var shiftList = this.$store.state.result
-
-      if (this.searchTime.time.minute < 10) {
-        this.searchTime.time.stringMinute = `0${this.searchTime.time.minute}`
-      } else {
-        this.searchTime.time.stringMinute = this.searchTime.time.minute
-      }
-
-      if (this.searchTime.time.hour < 10) {
-        this.searchTime.time.stringHour = `0${this.searchTime.time.hour}`
-      } else {
-        this.searchTime.time.stringHour = this.searchTime.time.hour
-      }
-
-      console.log(this.searchTime)
+      var shiftList = this.$store.getters.getResult
+      console.log(shiftList)
 
       console.log(this.searchType)
       if (this.searchType == 'train') {
@@ -499,12 +489,39 @@ export default {
 
       var nowTrain = document.querySelectorAll('.treroad-searchResults-searchResultList')[nowTrainIndex]
       window.scrollTo(0, (nowTrain.offsetTop - 175))
+    },
+    timeSort() {
+      let params = this.$route.params
+      let dateArray = params.searchTime.split("")
+      let year = dateArray.slice(0, 4).join('')
+      let month = dateArray.slice(4, 6).join('')
+      let day = dateArray.slice(6, 8).join('')
+      let week = new Date(`${month} ${day}, ${year}`)
+      let weeks = ['日', '一', '二', '三', '四', '五', '六']
+      this.searchTime.time.minute = Number(params.minute)
+      this.searchTime.time.hour = Number(params.hour)
+      if (params.minute < 10) {
+        this.searchTime.time.stringMinute = `0${params.minute}`
+      } else {
+        this.searchTime.time.stringMinute = `${params.minute}`
+      }
+
+      if (params.hour < 10) {
+        this.searchTime.time.stringHour = `0${params.hour}`
+      } else {
+        this.searchTime.time.stringHour = `${params.hour}`
+      }
+      this.searchTime.week = weeks[week.getDay()]
+      this.searchTime.day.push(year)
+      this.searchTime.day.push(month)
+      this.searchTime.day.push(day)
     }
   },
   // Life cycle hook
   beforeCreate() {},
   created() {
-    console.log(this.$route.params)
+    this.$store.dispatch('getApi', this.$route.params),
+      this.timeSort()
   },
   mounted() {
     this.getResult(),

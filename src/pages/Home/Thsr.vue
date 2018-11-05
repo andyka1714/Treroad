@@ -100,27 +100,27 @@ export default {
       let searchTime = this.searchTime.day.split("-").join('')
       let vm = this
       this.isLoading = true
+      if (this.selectStation.departureStation == '起始站') {
+        alert('請選擇您要出發的站別～')
+        this.isLoading = false
+        return
+      } else if (this.selectStation.arrivalStation == '終點站') {
+        alert('請選擇您要到達的站別～')
+        this.isLoading = false
+        return
+      }
       axios({
           method: 'get',
           url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=thsr`
         })
         .then((response) => {
-          console.log(response.data.payload)
-          this.isLoading = false
-          if (this.selectStation.departureStation == '起始站') {
-            alert('請選擇您要出發的站別～')
-            return
-          } else if (this.selectStation.arrivalStation == '終點站') {
-            alert('請選擇您要到達的站別～')
-            return
-          }
           vm.$store.state.result = response.data.payload
           vm.$store.state.searchTime = vm.searchTime
           vm.$store.state.departureStation = vm.selectStation.departureStation
           vm.$store.state.arrivalStation = vm.selectStation.arrivalStation
           vm.$store.state.searchType = vm.searchType
           vm.$router.push({
-            path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchType}`
+            path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchTime.time.hour}/${this.searchTime.time.minute}/${this.searchType}`
           })
         })
     },
@@ -145,7 +145,6 @@ export default {
           this.selectStation.arrivalStation = station
         }
       }
-
       this.stationShow = false
     },
     closeSelectBlock() {

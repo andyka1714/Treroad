@@ -53,7 +53,7 @@ export default new Router({
       ]
     },
     {
-      path: '/searchresults/:departureStation/:arrivalStation/:searchTime/:thsr',
+      path: '/searchresults/:departureStation/:arrivalStation/:searchTime/:hour/:minute/:transportation',
       name: 'SearchResults',
       component: SearchResults,
       // redirect: '/SearchResults',
