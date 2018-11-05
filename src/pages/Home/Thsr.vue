@@ -1,47 +1,45 @@
 <template>
-  <div class="treroad-thsr-search">
-    <div class="treroad-thsr-switch">
-      <div class="treroad-thsr-trainSwitch"></div>
-      <div class="treroad-thsr-thsrSwitch"></div>
-      <div class="treroad-thsr-mrtSwitch"></div>
-      <router-link to="train"><span class="treroad-thsr-trainSwitchSpan">台鐵查詢</span></router-link>
-      <span class="treroad-thsr-thsrSwitchSpan">高鐵查詢</span>
-      <router-link to="mrt"><span class="treroad-thsr-mrtSwitchSpan">捷運轉乘</span></router-link>
-    </div>
-    <div class="treroad-thsr-selectStation">
-      <p>選擇站名</p>
-      <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
-      <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
-      <img @click="stationExchange()" class="treroad-thsr-transfer" src="../../assets/iconTransfer.png" alt="transfer">
-    </div>
-    <div class="treroad-thsr-selectTime">
-      <p>選擇時間</p>
-      <input type="date" :min="restrictDate" v-model="searchTime.day">
-      <!-- <select name="" id="">
+<div class="treroad-thsr-search">
+  <div class="treroad-thsr-switch">
+    <div class="treroad-thsr-trainSwitch"></div>
+    <div class="treroad-thsr-thsrSwitch"></div>
+    <div class="treroad-thsr-mrtSwitch"></div>
+    <router-link to="train"><span class="treroad-thsr-trainSwitchSpan">台鐵查詢</span></router-link>
+    <span class="treroad-thsr-thsrSwitchSpan">高鐵查詢</span>
+    <router-link to="mrt"><span class="treroad-thsr-mrtSwitchSpan">捷運轉乘</span></router-link>
+  </div>
+  <div class="treroad-thsr-selectStation">
+    <p>選擇站名</p>
+    <input @click="selectDepartureArea()" type="button" :class="{selected: departureSelected}" :value="selectStation.departureStation">
+    <input @click="selectArrivalArea()" type="button" :class="{selected: arrivalSelected}" :value="selectStation.arrivalStation">
+    <img @click="stationExchange()" class="treroad-thsr-transfer" src="../../assets/iconTransfer.png" alt="transfer">
+  </div>
+  <div class="treroad-thsr-selectTime">
+    <p>選擇時間</p>
+    <input type="date" :min="restrictDate" v-model="searchTime.day">
+    <!-- <select name="" id="">
         <option value="">今天 10月30日</option>
       </select> -->
-      <div class="treroad-thsr-hourAndMinute">
-        <input type="text" maxlength="2" v-model="searchTime.time.hour">
-        時
-        <input type="text" maxlength="2" v-model="searchTime.time.minute">
-        分
-      </div>
+    <div class="treroad-thsr-hourAndMinute">
+      <input type="text" maxlength="2" v-model="searchTime.time.hour"> 時
+      <input type="text" maxlength="2" v-model="searchTime.time.minute"> 分
     </div>
-    <button class="treroad-thsr-startSearch" @click="getResult()">
+  </div>
+  <button class="treroad-thsr-startSearch" @click="getResult()">
       <span v-if="!isLoading">開始查詢</span>
       <Loading v-if="isLoading">
       </Loading>
     </button>
-    <div v-if="stationShow" class="treroad-thsr-stationBackground">
-      <div class="treroad-thsr-station">
-        <p>高鐵列表</p>
-        <ul>
-          <li v-for="(station, index) in trainStationList" @click="getStation(station)">{{station}}</li>
-        </ul>
-        <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
-      </div>
+  <div v-if="stationShow" class="treroad-thsr-stationBackground">
+    <div class="treroad-thsr-station">
+      <p>高鐵列表</p>
+      <ul>
+        <li v-for="(station, index) in trainStationList" @click="getStation(station)">{{station}}</li>
+      </ul>
+      <img @click="closeSelectBlock()" src="../../assets/delete.png" alt="">
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -49,10 +47,10 @@ import Loading from '@/components/Loading'
 import axios from 'axios'
 export default {
   props: {},
-  data () {
+  data() {
     return {
-      isLoading:false,
-      restrictDate:new Date().toJSON().slice(0,10),
+      isLoading: false,
+      restrictDate: new Date().toJSON().slice(0, 10),
       trainStationList: [],
       selectStation: {
         selectType: '',
@@ -72,10 +70,10 @@ export default {
     }
   },
   computed: {
-    departureSelected(){
+    departureSelected() {
       return this.selectStation.departureStation !== '起始站'
     },
-    arrivalSelected(){
+    arrivalSelected() {
       return this.selectStation.arrivalStation !== '終點站'
     }
   },
@@ -85,90 +83,92 @@ export default {
   watch: {},
   mixins: [],
   methods: {
-    getThsrStation () {
+    getThsrStation() {
       axios({
-        method: 'get',
-        url: '/static/json/station.json'
-      })
-      .then((response) => {
-        console.log(response.data.thsr)
-        this.trainStationList = response.data.thsr
-        console.log(this.trainStationList)
-      })
+          method: 'get',
+          url: '/static/json/station.json'
+        })
+        .then((response) => {
+          console.log(response.data.thsr)
+          this.trainStationList = response.data.thsr
+          console.log(this.trainStationList)
+        })
     },
-    getResult () {
+    getResult() {
       let departureStation = this.selectStation.departureStation
       let arrivalStation = this.selectStation.arrivalStation
       let searchTime = this.searchTime.day.split("-").join('')
       let vm = this
       this.isLoading = true
       axios({
-        method: 'get',
-        url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=thsr`
-      })
-      .then((response) => {
-        console.log(response.data.payload)
-        this.isLoading = false
-        if(this.selectStation.departureStation == '起始站'){
-          alert('請選擇您要出發的站別～')
-          return
-        }else if(this.selectStation.arrivalStation == '終點站'){
-          alert('請選擇您要到達的站別～')
-          return
-        }
-        vm.$store.state.result = response.data.payload
-        vm.$store.state.searchTime = vm.searchTime
-        vm.$store.state.departureStation = vm.selectStation.departureStation
-        vm.$store.state.arrivalStation = vm.selectStation.arrivalStation
-        vm.$store.state.searchType = vm.searchType
-        vm.$router.push({ path: '/searchresults' })
-      })
+          method: 'get',
+          url: `https://api.treroad.com/api/v1/trains/routes?departure_station_name=${departureStation}&arrival_station_name=${arrivalStation}&departure_date_time=${searchTime}&transportation=thsr`
+        })
+        .then((response) => {
+          console.log(response.data.payload)
+          this.isLoading = false
+          if (this.selectStation.departureStation == '起始站') {
+            alert('請選擇您要出發的站別～')
+            return
+          } else if (this.selectStation.arrivalStation == '終點站') {
+            alert('請選擇您要到達的站別～')
+            return
+          }
+          vm.$store.state.result = response.data.payload
+          vm.$store.state.searchTime = vm.searchTime
+          vm.$store.state.departureStation = vm.selectStation.departureStation
+          vm.$store.state.arrivalStation = vm.selectStation.arrivalStation
+          vm.$store.state.searchType = vm.searchType
+          vm.$router.push({
+            path: `/searchresults/${departureStation}/${arrivalStation}/${searchTime}/${this.searchType}`
+          })
+        })
     },
-    getArea (key) {
+    getArea(key) {
       console.log(key)
       this.selectStation.area = key
-      this.areaShow = false
+      // this.areaShow = false
       this.stationShow = true
     },
-    getStation (station) {
+    getStation(station) {
       console.log(station)
-      if(this.selectType =='departure') {
-        if(this.selectStation.arrivalStation == station){
+      if (this.selectType == 'departure') {
+        if (this.selectStation.arrivalStation == station) {
           alert('起始站與終點站不能相同喲～')
-        }else{
+        } else {
           this.selectStation.departureStation = station
         }
-      }else if(this.selectType =='arrival') {
-        if(this.selectStation.departureStation == station){
+      } else if (this.selectType == 'arrival') {
+        if (this.selectStation.departureStation == station) {
           alert('起始站與終點站不能相同喲～')
-        }else{
+        } else {
           this.selectStation.arrivalStation = station
         }
       }
 
       this.stationShow = false
     },
-    closeSelectBlock () {
+    closeSelectBlock() {
       this.stationShow = false
     },
-    selectDepartureArea () {
+    selectDepartureArea() {
       this.stationShow = true
       this.selectType = 'departure'
       console.log(this.selectType)
     },
-    selectArrivalArea () {
+    selectArrivalArea() {
       this.stationShow = true
       this.selectType = 'arrival'
       console.log(this.selectType)
     },
-    stationExchange () {
-      if(this.selectStation.departureStation == '起始站' || this.selectStation.arrivalStation == '終點站') return
+    stationExchange() {
+      if (this.selectStation.departureStation == '起始站' || this.selectStation.arrivalStation == '終點站') return
       var tem = ''
       tem = this.selectStation.departureStation
       this.selectStation.departureStation = this.selectStation.arrivalStation
       this.selectStation.arrivalStation = tem
     },
-    getDate () {
+    getDate() {
       var date = new Date()
       var year = date.getFullYear()
       var month = date.getMonth() + 1
@@ -176,9 +176,9 @@ export default {
       var hour = date.getHours()
       var minute = date.getMinutes()
       var week = date.getDay()
-      if(month < 10) month = '0' + month
-      if(day < 10) day = '0' + day
-      var today =`${year}-${month}-${day}`
+      if (month < 10) month = '0' + month
+      if (day < 10) day = '0' + day
+      var today = `${year}-${month}-${day}`
       this.searchTime.day = today
       this.searchTime.time.hour = hour
       this.searchTime.time.minute = minute
@@ -186,10 +186,10 @@ export default {
     }
   },
   // Life cycle hook
-  beforeCreate () {},
-  mounted () {
+  beforeCreate() {},
+  mounted() {
     this.getThsrStation(),
-    this.getDate()
+      this.getDate()
   }
 }
 </script>
